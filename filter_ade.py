@@ -26,8 +26,9 @@ head='Source\tTarget\tsource cof\tTarget cof\tQl\tTl\tLigand\tEC distance\tRMSD\
 out_file.write(head)
 ade_file.write(head)
 
-
+NAD=['NAD','ADJ',	'ENP','NAP','NDP','NJP','NZQ','XNP']
 in_file=open('F:\span/align_nonredundant_org_new_center.txt','r')   
+in_file.readline()
 for line in in_file:
     line=line.split('\t')
     cof1=line[0].split('_')[0]
@@ -37,22 +38,23 @@ for line in in_file:
    # print(cof1,cof2)       
     if cof1=='ADE' or cof2=='ADE':
         ade_file.write('\t'.join(line))
-    elif cof1=='NAD':
+    elif cof1 in NAD:
         if line[0].split('_')[3][3]=='-':
+            
             #cof1=line[0].split('_')[3][0:3]
             line[0]=line[0].split('_')
             line[0][0]=line[0][0][:4]+'.ADE'
             line[0]='_'.join(line[0])
-            print(line[0])
+            #print(line[0])
             ade_file.write('\t'.join(line))
             continue
-    elif cof2=='NAD':
+    elif cof2 in NAD:
         if line[1].split('_')[3][3]=='-':
-            
-            line[0]=line[0].split('_')
-            line[0][0]=line[0][0][:4]+'.ADE'
-            line[0]='_'.join(line[0])
-            print(line[0])
+            #print(line[1])
+            line[1]=line[1].split('_')
+            line[1][0]=line[1][0][:4]+'.ADE'
+            line[1]='_'.join(line[1][:3])
+            #print(line[1])
             ade_file.write('\t'.join(line))
             continue
     out_file.write('\t'.join(line))
@@ -66,16 +68,20 @@ for line in in_file:
         line[0]='_'.join(line[0].split('_')[:3])
         line[1]='_'.join(line[1].split('_')[:3])
         ade_file.write('\t'.join(line))
-    elif cof1=='NAD':
+    elif cof1 in NAD:
         if line[0].split('_')[3][3]=='-':
-            cof1=line[0].split('_')[3][0:3]
-            print(cof1)
+            line[0]=line[0].split('_')
+            line[0][0]=line[0][0][:4]+'.ADE'
+            line[0]='_'.join(line[0])
+            #print(line[0])
             ade_file.write('\t'.join(line))
             continue
-    elif cof2=='NAD':
+    elif cof2 in NAD:
         if line[1].split('_')[3][3]=='-':
-            cof2=line[1].split('_')[3][0:3]
-            print(cof2)
+            line[1]=line[1].split('_')
+            line[1][0]=line[1][0][:4]+'.ADE'
+            line[1]='_'.join(line[1][:3])
+            #print(line[1])
             ade_file.write('\t'.join(line))
             continue
     line[0]='_'.join(line[0].split('_')[:3])
