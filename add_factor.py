@@ -10,11 +10,11 @@ max_sd=367.0
 
 cores=8
 
-groups_file='f:/new_pymol_align_11.5.18/align_filter_NO_ADE_all.txt'
+groups_file=open('f:/new_pymol_align_11.5.18/align_filter_NO_ADE_all.txt','r')
 out_file=open('f:/new_pymol_align_11.5.18/align_filter_NO_ADE_all_with_factor.txt','w')
 head='Source\tTarget\tsource cof\tTarget cof\tQl\tTl\tLigand\tEC distance\tRMSD\tAlign CA\tRaw alignment score\tAligned Residues\tLigand center distance\tStructural Distance'
 out_file.write(head+'\tNormalized RMSD\tNormalized CA\tNormalizesd metal distance\tNormalized stractural distance\tFactor\n' )
-#groups_file.readline()
+groups_file.readline()
 
 
 def add_factor(line):
@@ -37,18 +37,22 @@ def add_factor(line):
     return x
 
 if __name__ == '__main__':
-
-    
-    with open(groups_file, 'r') as infile:
-        lines_gen = islice(infile, cores)
-        line_list=(list(lines_gen))
-        with Pool(cores) as p:
-            for line in p.imap_unordered(add_factor,list(line_list)):
-                if line !='NA':
-                    out_file.write(line)
-                #tempfile=open(temp_file,'r')
-                #out_file.write(tempfile.read())
-                #tempfile.close()
+    t=0
+    lines=[]
+    for line in groups_file:
+        lines.append(line)
+        
+        if len(lines)==10000:
+            print(lines[0])
+            t=t+1
+            with Pool(cores) as p:
+                for i in p.imap_unordered(add_factor,list(lines)):
+                    if i !='NA':
+                        #print(i)
+                        out_file.write(i)
+            lines=[]
+        if t==5:
+           break             
                 
 out_file.close()
 print('end')
