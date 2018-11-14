@@ -33,6 +33,6 @@ wait
 echo "All processes done!"
 cat in_temp_file.??_out.txt > temp_all.txt
 echo "combine files!"
-echo 'source\ttarget\trmsd\tca\trmsd\ca\tmd\n' | cat - temp_all.txt > align_filter_rmsd_ca_ratio_all.txt
-
-#rm in_temp_file.* temp_ADE_all.txt temp_NO_ADE_all.txt
+wait
+echo 'source\ttarget\trmsd\tca\trmsd\ca\tmd\n' | cat - temp_ADE_all.txt > align_rmsd_ca_ratio_all.txt
+wait

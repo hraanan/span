@@ -12,7 +12,7 @@ for line in in_file:
     line=line.split('\t')
     
     try:
-       if float(line[5])<rmsd and float(line[7])>ca and float(line[9])<md:
+       if float(line[5])<rmsd and float(line[6])>ca and float(line[9])<md:
                 y=y+1
                 join_line= '\t'.join(line)  
                 out_file.write(join_line)

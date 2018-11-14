@@ -74,7 +74,7 @@ def pyFunc(in_file_name):
               
         count_file_len=file_len(count_file_name)
        
-        count_file=open(count_file_name,'w')
+        count_file=open(count_file_name,'a')
     err_file_name=in_file_name+'_'+str(count_file_len)+'_err.txt'
     out_file_name=in_file_name+'_'+str(count_file_len)+'_out.txt' #_'+in_file_name.split('.')[1]+'.txt'
     out_file=open(out_file_name,'w')
