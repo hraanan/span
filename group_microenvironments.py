@@ -4,8 +4,9 @@ Created on Thu Nov  8 12:56:22 2018
 
 @author: hraanan
 """
-in_file=open ('f:/new_pymol_align_11.5.18/align_1.3.txt','r')
-out_file=open('f:/new_pymol_align_11.5.18/groups_1.3.txt','w')
+
+in_file=open ('f:/rmsd_ca_ratio/align_filter_rmsd_ca_ratio_all_ca_25_ratio_0.1_md_2.txt','r')
+out_file=open('f:/rmsd_ca_ratio/groups_align_filter_rmsd_ca_ratio_all_ca_25_ratio_0.1_md_2.txt','w')
 from networkx.algorithms import community
 import networkx as nx
 
@@ -16,7 +17,7 @@ cofactors={}
 in_file.readline()
 
 
-microen_file=open('f:/new_pymol_align_11.5.18/microenvironments_list_1.3.txt','r')
+microen_file=open('f:/rmsd_ca_ratio/microenvironments_list_ca_25_ratio_0.1_md_2.txt','r')
 microen_list=[]
 
 for line in microen_file:
@@ -29,7 +30,7 @@ i=0
 for line in in_file:
     line=line.split('\t')
     #if line[0] in microen_list or line[1] in microen_list:
-    G.add_edge(line[0],line[1],whight=line[16][:-1])
+    G.add_edge(line[0],line[1],rmsd_ratio=line[11][:-1],md=line[9])
     i=i+1
     #if i==50000:
      #   i=0
@@ -44,8 +45,7 @@ for node in G.nodes():
 #    if G.has_node(microen)==False:
 #        G.remove_node(microen)
 print('filterd nodes:',G.number_of_nodes())  
-nx.write_gexf(G, 'f:/new_pymol_align_11.5.18/full_graph.gexf')
-
+nx.write_gexf(G, 'f:/rmsd_ca_ratio/graph_ca_25_ratio_0.1_md_2.txt.gexf')
 nx.transitivity(G)    
 components = [comp for comp in nx.connected_components(G)]
 x=0

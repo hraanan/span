@@ -19,6 +19,8 @@ def cof_align_list(path):
     files_list=os.listdir(path)
     align_list=[]
     cof=path.split('/')[3]
+    if cof!='ADE':
+        return
     temp_file=open(cof+'_align.txt','w')
     for i,f_i in enumerate(files_list):
         for j,f_j in enumerate(files_list):
@@ -34,6 +36,7 @@ if __name__ == '__main__':
     dir_list=[]
     for subdir, dirs, files in os.walk(rootdir):
         dir_list.append(subdir)
+    #dir_list=['a','ADE']
     with Pool(8) as p:
         for temp_file in p.imap_unordered(cof_align_list, dir_list[1:]):
             print(temp_file)

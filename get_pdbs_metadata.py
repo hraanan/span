@@ -170,10 +170,10 @@ def process_data(threadName, q):
          queueLock.release()
          time.sleep(1)
 
-
-in_file=open('f:/new_pymol_align_11.5.18/full_list_of_microenvironments_align_all_no_ADE_2018_with_factor_ca_10_md_3_rmsd_5_with_factor_1.4.txt','r')
-#in_file=open('f:/span/pdb_metadata1.txt','r')
-out_file=open('f:/new_pymol_align_11.5.18/pdb_metadata.txt','w')
+in_file_name=sys.argv[1]
+#in_file=open('f:/new_pymol_align_11.5.18/full_list_of_microenvironments_align_all_no_ADE_2018_with_factor_ca_10_md_3_rmsd_5_with_factor_1.4.txt','r')
+in_file=open(in_file_name,'r')
+out_file=open(in_file_name+'_out.txt','w')
 pdb_list=[]
 old_pdb_list=[]
 i=0

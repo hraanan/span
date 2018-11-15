@@ -1,5 +1,5 @@
-in_file=open ('align_filter_rmsd_ca_ratio_all_ca_10_ratio_0.1_md_2','r')
-out_file=open ('align_filter_rmsd_ca_ratio_all_ca_25_ratio_0.1_md_2','w')
+in_file=open ('f:/rmsd_ca_ratio/align_filter_rmsd_ca_ratio_all_ca_10_ratio_0.1_md_2.txt','r')
+out_file=open ('f:/rmsd_ca_ratio/align_filter_rmsd_ca_ratio_all_ca_25_ratio_0.1_md_2.txt','w')
 ca=25
 rmsd=.1
 md=2
