@@ -12,28 +12,22 @@ print(in_file_name)
 out_file=open(in_file_name+'_NO_ADE.txt','w')
 ade_file=open(in_file_name+'_ADE.txt','w')
 
-#head='Source\tTarget\tsource cof\tTarget cof\tQl\tTl\tLigand\tEC distance\tRMSD\tAlign CA\tRaw alignment score\tAligned Residues\tLigand center distance\tStructural Distance\n'
-#out_file.write(head)
-#ade_file.write(head)
-
-#NAD=['NAD','ADJ','ENP','NAP','NDP','NJP','NZQ','XNP']
-
 in_file=open(in_file_name,'r')   
 in_file.readline()
 
 for line in in_file:
-    try:
+    #try:
         line=line.split('\t')
         if line[0].split('_')[0].split('.')[1]=='ADE' or line[1].split('_')[0].split('.')[1]=='ADE' :
-            ade_file.write('\t'.join(line))
+            ade_file.write('\t'.join(line)[:-1]+'\t'+str(float(line[5])/float(line[6]))+'\n')
         else:
-            out_file.write('\t'.join(line))
+            out_file.write('\t'.join(line)[:-1]+'\t'+str(float(line[5])/float(line[6]))+'\n')
         
 
-    except Exception as e:
-         print (line)
-         print(e)
-         continue
+    #except Exception as e:
+      #   print (line)
+      #   print(e)
+      #   continue
    
 out_file.close()
 ade_file.close()

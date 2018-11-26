@@ -84,11 +84,11 @@ def is_in_list(cof):
         return False
 #test get_atom_list function
 
-#print(is_in_list('nad'))
-#print(get_atom_list('CLA'))
-#print(get_atom_list('NAD'))
-#print(get_atom_list('ADE_FAD'))
-#
-#print(has_ade('NAD'))
-#print(has_ade('CLA'))
+print(is_in_list('nad'))
+print(get_atom_list('CLA'))
+print(get_atom_list('NAD'))
+print(get_atom_list('ADE_FAD'))
+
+print(has_ade('NAD'))
+print(has_ade('CLA'))
 #

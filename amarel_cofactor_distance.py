@@ -56,19 +56,31 @@ Alledges_file=open('edges_'+in_flie_name,'w')#"chain_from_"+sys.argv[1]+'_to_'+s
 Alledges_file.write('source\ttarget\tdistance\tprotein\n')
 
 edges={}
-
+#%%
 # make dict of  microen andlist of  pdbs
 microen_dict={}
 pdbs_list=[]
-with open('groups_align_filter_rmsd_ca_ratio_all_ca_25_ratio_0.1_md_2.txt','r') as microen_file:
+cofactors_list=[]
+with open(in_flie_name,'r') as microen_file:
+    for line in microen_file:
+        if line[:-2].lower() not in pdbs_list:
+            pdbs_list.append(line[:-2].lower())
+        
+with open('groups_align_ca_25_rmsd_5_ratio_0.1_md_4.txt','r') as microen_file:
     for line in microen_file:
         line=line.split('\t')
-        microen_dict[line[0]]=line[:-1]
-        if line[0].split('.')[0] not in pdbs_list:
-            pdbs_list.append(line[0].split('.')[0])
+        microen_dict[line[0]]=line[1][:-1]
+#        if line[0].split('.')[0] not in pdbs_list:
+#            pdbs_list.append(line[0].split('.')[0])
+        if line[0].split('.')[1].split('_')[0] not in cofactors_list:
+            cofactors_list.append(line[0].split('.')[1].split('_')[0])
     microen_file.close()
 
-#protein_list=['4ac5','1h0h','2fdn','3qiy']
+#%%
+for key,value in microen_dict.items():
+    if key.split('.')[0]=='1fdn':
+        print(key)
+#pdbs_list=['1fdn','1h0h','2fdn','3qiy']
 
 pdbdir='/scratch/hr253/pdb_download_8_2018/pdb/' # folder of the dpb files
 
@@ -76,149 +88,36 @@ for prot_index,protein in enumerate(pdbs_list):
     print('prot_index:'+str(prot_index))
     parser = PDB.PDBParser(PERMISSIVE=1)
     structure = parser.get_structure(protein,pdbdir+protein[1:3]+'/pdb'+protein+'.ent')
+#%%    
+#geting the coordinates of all cofactors in the pdb
     for model in structure:
         if model.id==0:
          Ligands=[]
          lig=[]
          for chain in model:
               for residue in chain:
-                 res_id=protein+'_'+residue.resname+'_'+chain.id+'_'+str(residue.id[1])
+                 res_id=protein+'.'+residue.resname+'_'+chain.id+'_'+str(residue.id[1])
                  res_id=res_id.replace(" ","")                    
                  if residue.resname not in AA and residue.resname not in CF:
-#                   #  print ('res_id:'+res_id)                    
-                     if res_id in microen_dict:
-                        #print(chain.id,residue.id)
+                     print ('res_id:'+res_id)                    
+                     if res_id in microen_dict.keys():
+                        print(chain.id,residue.id)
                         coord = []
-                        cof_atom_list=[]                    
+                        cof_atom_list=['all']                    
                         if residue.resname in chl or residue.resname in heme:
                             cof_atom_list=pyr_atom_list
-                        else:
+                        elif center.is_in_list(residue.resname)==True:
                             cof_atom_list=center.get_atom_list(residue.resname)
                   
-                        if residue.resname not in chl and residue.resname not in heme:                    
-                            for atom in residue:
-                            #   print(atom.coord)
-                                
-                               at=atom.coord
-                               x=at[0]
-                               y=at[1]
-                               z=at[2]
-                               atcord=[x,y,z]
-                               coord.append(atcord)
-                            x=0
-                            y=0
-                            z=0
-                            i=0
-                            for point in coord:
-                                i=i+1
-                                x=x+point[0]
-                                y=y+point[1]
-                                z=z+point[2]
-                            x=x/i
-                            y=y/i
-                            z=z/i
-                           # c=numpy.array([x,y,z])+str(x)+','+str(y)+','+str(z)
-                            lig=protein,chain.id,residue.id[1],cofactors_group.get(res_id),x,y,z,coord,metal_cofactors.get(res_id)  # lig= list of cofactor deatils (strings) 
-                           # print(lig)
-                            Ligands.append(lig)
-                            #Dist.write(protein+','+chain.id+','+str(residue.id[1])+','+residue.resname+','+str(x)+','+str(y)+','+str(z)+'\n')
-        #         for i in Ligands:
-        #            print(i)                  
-                        if residue.resname in chl or residue.resname in heme:                    
-                                                                        
-                            for atom in residue:
-                               if atom.name in pyr_atom_list or atom.name[0]=='O' or atom.name=='MG' or atom.name=='FE':
-                                #   print(atom.coord)
-                                    
-                                #   print(atom.name)
-                                   at=atom.coord
-                                   x=at[0]
-                                   y=at[1]
-                                   z=at[2]
-                                   atcord=[x,y,z]
-                                   coord.append(atcord)
-                            x=0
-                            y=0
-                            z=0
-                            i=0
-                            for point in coord:
-                                i=i+1
-                                x=x+point[0]
-                                y=y+point[1]
-                                z=z+point[2]
-                            x=x/i
-                            y=y/i
-                            z=z/i
-                           # c=numpy.array([x,y,z])+str(x)+','+str(y)+','+str(z)
-                            lig=protein,chain.id,residue.id[1],cofactors_group.get(res_id),x,y,z,coord,metal_cofactors.get(res_id)  # lig= list of cofactor deatils (strings) 
-                           # print(lig)
-                            Ligands.append(lig)
-                            #Dist.write(protein+','+chain.id+','+str(residue.id[1])+','+residue.resname+','+str(x)+','+str(y)+','+str(z)+'\n')
-                        if residue.resname in al_dict.items():
-                            al=al_dict[residue.resname][0]
-                            for atom in residue:
-                               if atom.name in al or al=='all':
-                                #   print(atom.coord)
-                                    
-                                #   print(atom.name)
-                                   at=atom.coord
-                                   x=at[0]
-                                   y=at[1]
-                                   z=at[2]
-                                   atcord=[x,y,z]
-                                   coord.append(atcord)
-                            x=0
-                            y=0
-                            z=0
-                            i=0
-                            for point in coord:
-                                i=i+1
-                                x=x+point[0]
-                                y=y+point[1]
-                                z=z+point[2]
-                            x=x/i
-                            y=y/i
-                            z=z/i
-                           # c=numpy.array([x,y,z])+str(x)+','+str(y)+','+str(z)
-                            lig=protein,chain.id,residue.id[1],cofactors_group.get(res_id),x,y,z,coord,metal_cofactors.get(res_id)  # lig= list of cofactor deatils (strings) 
-                           # print(lig)
-                            Ligands.append(lig)                        
-                            if len(al_dict[residue.resname])>1:
-                                al=al_dict[residue.resname][1]
-                                for atom in residue:
-                                   if atom.name in al:
-                                    #   print(atom.coord)
-                                        
-                                    #   print(atom.name)
-                                       at=atom.coord
-                                       x=at[0]
-                                       y=at[1]
-                                       z=at[2]
-                                       atcord=[x,y,z]
-                                       coord.append(atcord)
-                                x=0
-                                y=0
-                                z=0
-                                i=0
-                                for point in coord:
-                                    i=i+1
-                                    x=x+point[0]
-                                    y=y+point[1]
-                                    z=z+point[2]
-                                x=x/i
-                                y=y/i
-                                z=z/i
-                               # c=numpy.array([x,y,z])+str(x)+','+str(y)+','+str(z)
-                                res_id=protein+'_'+'ADE'+'_'+chain.id+'_'+str(residue.id[1])
-                                res_id=res_id.replace(" ","")                              
-                                lig=protein,chain.id,residue.id[1],cofactors_group.get(res_id),x,y,z,coord,metal_cofactors.get(res_id)  # lig= list of cofactor deatils (strings) 
-                               # print(lig)
-                                Ligands.append(lig)                
-                            
-                        
-    #         for i in Ligands:
-    #            print(i)                  
-
+                        coord=center.get_atom_coord_list(residue,cof_atom_list)   
+                        x=0
+                        y=0
+                        z=0
+                        lig=protein,chain.id,residue.id[1],microen_dict.get(res_id),x,y,z,coord  # lig= list of cofactor deatils (strings) 
+                        print(lig)
+                        Ligands.append(lig)
+#%%     
+   
     x=[]
     y=[]
     z=[]
@@ -232,7 +131,7 @@ for prot_index,protein in enumerate(pdbs_list):
         y.append(cluster[5])
         z.append(cluster[6])
         
-# if there are more than 1 cofactor in the PDB make list of the cofactor pers that in distance of less than min_dis 
+# if there are more than 1 cofactor in the PDB, make list of the cofactor pairs that in distance of less than min_dis 
     if len(x)>1 :
         
         for i in range(0,len(x)):
@@ -298,7 +197,7 @@ for prot_index,protein in enumerate(pdbs_list):
         if int(i[0])==int(i[1]):
             nebrs.remove(i)
     print('Done neighbors procsses...............')
-   # print('nebrs:',nebrs)
+    print('nebrs:',nebrs)
     
 
     chain=[]
@@ -315,8 +214,10 @@ for prot_index,protein in enumerate(pdbs_list):
                 lignebrs[i].append(j[0])
  #   print ('onesidenebrs:',onesidenebrsdis)
     for i in onesidenebrsdis:
-        fst=Ligands[i[0]][3]+';'+Ligands[i[0]][8]
-        scd=Ligands[i[1]][3]+';'+Ligands[i[1]][8]
+        print(i)
+        print(Ligands[i[0]])
+        fst=Ligands[i[0]][3]#+';'+Ligands[i[0]][8]
+        scd=Ligands[i[1]][3]#+';'+Ligands[i[1]][8]
 #        x=[Ligands[i[0]][4],Ligands[i[1]][4]]
 #        y=[Ligands[i[0]][5],Ligands[i[1]][5]]
 #        z=[Ligands[i[0]][6],Ligands[i[1]][6]]        
@@ -325,40 +226,41 @@ for prot_index,protein in enumerate(pdbs_list):
         key=[fst,scd]
         if Ligands[i[0]][3] != Ligands[i[1]][3]:
             key=sorted(key)
-        key[0]=key[0].split(';')
-        key[1]=key[1].split(';')
-        Alledges_file.write(key[0][0]+'\t'+key[1][0]+'\t'+key[0][1]+'\t'+key[1][1]+'\t'+str(dis)+'\t'+protein+'\t'+ec+'\n')          
+        #key[0]=key[0].split(';')
+        #key[1]=key[1].split(';')
+        #Alledges_file.write(key[0][0]+'\t'+key[1][0]+'\t'+key[0][1]+'\t'+key[1][1]+'\t'+str(dis)+'\t'+protein+'\n')          
+        Alledges_file.write(str(int(key[0]))+'\t'+str(int(key[1]))+'\t'+str(dis)+'\t'+protein+'\n')          
         edge=key[0][0]+'-'+key[1][0]
         key=edge
         if key in edges:
             edges[key] += 1
         else:
             edges[key] = 1
-        if key in ecs:
-            if ec not in ecs.get(key):
-                x= ecs.get(key)  
-                x.append(ec)
-                ecs[key]=x
-        if key not in ecs:
-            ecs[key]=[ec]
+#        if key in ecs:
+#            if ec not in ecs.get(key):
+#                x= ecs.get(key)  
+#                x.append(ec)
+#                ecs[key]=x
+#        if key not in ecs:
+#            ecs[key]=[ec]
        
         
 
-for key,value in edges.items():
-    key=key.split('-')    
-    Allchains.write(key[0]+'\t'+key[1]+'\t'+str(value)+'\n')
-for key,value in ecs.items():
-    key=key.split('-')    
-#    counts_ecs=[]    
-#    for i in value:
-#        if i not in counts_ecs:
-            
-#    ec_file.write(key[0]+'\t'+key[1]+'\t'+str(len(value))+'\t'+str(';'.join(value))+'\n')
-    
-Allchains.close()
+#for key,value in edges.items():
+#    key=key.split('-')    
+#    Allchains.write(key[0]+'\t'+key[1]+'\t'+str(value)+'\n')
+##for key,value in ecs.items():
+##    key=key.split('-')    
+##    counts_ecs=[]    
+##    for i in value:
+##        if i not in counts_ecs:
+#            
+##    ec_file.write(key[0]+'\t'+key[1]+'\t'+str(len(value))+'\t'+str(';'.join(value))+'\n')
+#    
+#Allchains.close()
 Alledges_file.close()
 
 #ec_file.close()
 
-cofactors_file.close()
+#cofactors_file.close()
 print("end")

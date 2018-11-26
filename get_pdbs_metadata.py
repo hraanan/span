@@ -2,12 +2,11 @@ import queue
 import threading
 import time
 import Bio
-
+from Bio.PDB import *
 from Bio import PDB
 from Bio.PDB import PDBIO
 from Bio.PDB.PDBParser import PDBParser
 
-from Bio.PDB import *
 import sys
 from Bio import Entrez
 pdbl = PDBList()
@@ -55,6 +54,7 @@ def process_data(threadName, q):
                 structure = parser.get_structure(protein,rootdir+protein[1:3]+'/pdb'+protein+'.ent')
             except:
                 out_file.write(protein+'\t'+'cofactor'+'\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\n')
+                continue
         head= structure.header['head']
         comp = structure.header['compound']
         # Reading EC number from the pdb header

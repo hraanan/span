@@ -9,11 +9,11 @@ import networkx as nx
 G=nx.Graph()
 
 
-in_file=open ('f:/new_pymol_align_11.5.18/align_1.4.txt','r')
-group_file=open('f:/new_pymol_align_11.5.18/group_4.txt','r')
+in_file=open ('align_ca_25_rmsd_5_ratio_0.1_md_4.txt','r')
+group_file=open('group101.txt','r')
 nonredundant_file=open('f:/programs/span/data/cullpdb_pc90_res3.0_R0.3_d181024_chains_90%_10.24.18.txt','r')
 
-out_align_file=open('f:/new_pymol_align_11.5.18/align_group4_diff_cof.txt','w')
+out_align_file=open('group101_diff_cof.txt','w')
 out_align_file.write(in_file.readline())
 
 #nonredundant_file.readline()
