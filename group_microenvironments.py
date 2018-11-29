@@ -5,8 +5,8 @@ Created on Thu Nov  8 12:56:22 2018
 @author: hraanan
 """
 
-in_file=open ('align_ca_25_rmsd_5_ratio_0.1_md_4.txt','r')
-out_file=open('groups_align_ca_25_rmsd_5_ratio_0.1_md_4_with_chl.txt','w')
+in_file=open ('align_ca_25_rmsd_5_ratio_0.1_md_2.txt','r')
+out_file=open('groups_align_ca_25_rmsd_5_ratio_0.1_md_2_chl_filterd.txt','w')
 from networkx.algorithms import community
 import networkx as nx
 
@@ -17,7 +17,7 @@ cofactors={}
 in_file.readline()
 
 
-microen_file=open('full_microenvironments_list_align_ca_25_rmsd_5_ratio_0.1_md_4_synt_filterd.txt','r')
+microen_file=open('full_microenvironments_list_align_ca_25_rmsd_5_ratio_0.1_md_2_synt_chl_filterd.txt','r')
 microen_list=[]
 
 for line in microen_file:
@@ -45,15 +45,19 @@ for node in G.nodes():
 #    if G.has_node(microen)==False:
 #        G.remove_node(microen)
 print('filterd nodes:',G.number_of_nodes())  
-nx.write_gexf(G, 'graph_ca_25_ratio_0.1_md_4_with_chl.gexf')
+nx.write_gexf(G, 'graph_ca_25_ratio_0.1_md_2_chl_filterd.gexf')
+
+
+'''
 nx.transitivity(G)    
 components = [comp for comp in nx.connected_components(G)]
 x=0
-for comp in components:
+print('start')
+for comp in nx.connected_components(G):
     for node in list(comp):
         out_file.write(node+'\t'+str(x)+'\n')
     x=x+1
 
 print('end')
-
+'''
 out_file.close()

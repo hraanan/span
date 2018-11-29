@@ -32,7 +32,7 @@ count=0
 #mkdir run
 for f in temp.*;
 do 
-	sbatch test_run $PYTHON_FILE $f
+	sbatch amarel_run.bash $PYTHON_FILE $f
 done
 wait
 echo "All running!"

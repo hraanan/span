@@ -66,7 +66,7 @@ with open(in_flie_name,'r') as microen_file:
         if line[:-2].lower() not in pdbs_list:
             pdbs_list.append(line[:-2].lower())
         
-with open('groups_align_ca_25_rmsd_5_ratio_0.1_md_4.txt','r') as microen_file:
+with open('groups_align_ca_25_rmsd_5_ratio_0.1_md_2_chl_filterd.txt','r') as microen_file:
     for line in microen_file:
         line=line.split('\t')
         microen_dict[line[0]]=line[1][:-1]

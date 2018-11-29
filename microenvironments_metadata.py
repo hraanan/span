@@ -5,9 +5,9 @@ Created on Thu Nov  8 12:56:22 2018
 @author: hraanan
 """
 
-in_file=open ('groups_align_ca_25_rmsd_5_ratio_0.1_md_4.txt','r')
-out_file=open('microenvironments_metadata.txt','w')
-pdb_file=open('pdbs_metadata.txt','r')
+in_file=open ('groups_align_ca_25_rmsd_5_ratio_0.1_md_2_chl_filterd.csv','r')
+out_file=open('microenvironments_metadata_chl_filterd.txt','w')
+pdb_file=open('pdb_metadata_no_synthetic.txt','r')
 cof_file=open('F:\programs\span\data\manual_cofactor_atoms_list.txt','r')
 microen_list=[]
 fes=['SF4','FES','F3S']
@@ -19,7 +19,7 @@ for line in pdb_file:
         pdb_dict[line[0]]=line[2:]
 pdb_file.close()
 cof_dict={}
-
+in_file.readline()
 for line in cof_file:
     line=line.split('\t')
     if line[1] not in cof_dict:
@@ -29,6 +29,7 @@ cof_file.close()
 for line in in_file:
     line=line[:-1]
     line=line.split('\t')
+    
     cof=line[0].split('.')[1].split('_')[0]
     if cof in cof_dict:
         cof_type=cof_dict.get(cof)

@@ -53,7 +53,7 @@ out_file=open(out_file_name,'a')
 err_file_name=dirpath+'/err/err_'+in_file_name+str(count_file_len) #_'+in_file_name.split('.')[1]+'.txt'
 err_file=open(err_file_name,'a')              
 
-run_file_name=dirpath+'/run/run_'+in_file_name+str(count_file_len) #_'+in_file_name.split('.')[1]+'.txt'
+run_file_name=dirpath+'/run/run_'+in_file_name #+str(count_file_len) #_'+in_file_name.split('.')[1]+'.txt'
 run_file=open(run_file_name,'w')              
 run_file.close()
 
@@ -76,10 +76,11 @@ for line in in_file:
         line=line.split('\t')
         microen1=line[0][:-4]
         microen2=line[1][:-6]
-        
+        chain1=line[0].split('_')[-2]
+        chain2=line[1].split('_')[-2]
+        #print(chain1,chain2)
         #PDB2='3cw9.01A_B_991'
         lig=line[0].split('_')[0]
-        chain1[1]=line[0].split('_')[1]
         lig1=lig.split('.')[1]
         Fldr1=microen_dir+lig1+'/'
         if lig1=='ADE':
@@ -88,7 +89,6 @@ for line in in_file:
         #PDB1=lig1.split('.')[0]
         
         lig=line[1].split('_')[0]
-        chain2[1]=line[1].split('_')[1]
         lig2=lig.split('.')[1]
         Fldr2=microen_dir+lig2+'/'
         if lig2=='ADE':
@@ -104,6 +104,7 @@ for line in in_file:
         Ql=pymol.cmd.count_atoms('PDB1 and name CA')
         Tl=pymol.cmd.count_atoms('PDB2 and name CA')
         if Ql<10 or Tl<10:
+            #print('too short microen')
             continue
         #print('Ql,Tl:'+str(Ql)+str(Tl))
         res_num1=microen1.split('_')
@@ -125,11 +126,14 @@ for line in in_file:
             atomlist=pymol.cmd.get_model('PDB1 and chain '+chain1+' and resi '+res_num1, 1).get_coord_list()
         else:
             for atom in cof_atom_list:
+                #print('PDB1 and chain '+chain1+' and resi '+res_num1+' and name '+atom)
                 atomlist=atomlist+(pymol.cmd.get_model('PDB1 and chain '+chain1+' and resi '+res_num1+' and name '+atom, 1).get_coord_list())
+        #print(atomlist)
         center1=center.get_center(atomlist)    
         #print(center1)       
         if center1=='NA':
-                continue
+            #print('center1=NA')    
+            continue
         atomlist=[]                    
                                 
         cof_atom_list=center.get_atom_list(lig1)
@@ -141,22 +145,24 @@ for line in in_file:
         center2=center.get_center(atomlist)    
         #print(center2)         
         if center2=='NA':
-                continue
+            #print('center2=NA')        
+            continue
         atomlist=[]             
         #print(center1,center2)
         Dis=math.sqrt((pow((center1[0]-center2[0]),2))+(pow((center1[1]-center2[1]),2))+(pow((center1[2]-center2[2]),2)))
         #print(Dis)
         if Dis>15:
-            #print('large distance')
+           # print('large distance')
             continue
         #print(x)    
         D= Ql+Tl-(2*x[6])  #was x[1] in all last runs before 4.7.16
         align_out=str(Ql)+'\t'+str(Tl)+'\t'+lig1+'_'+lig2+'\t'+str(x[0])+'\t'+str(x[1])+'\t'+str(x[5])+'\t'+str(x[6])+'\t'+str(Dis)+'\t'+str(D)
         #print(align_out)
         out_file.write(microen1+'\t'+microen2+'\t'+align_out+'\n')	
-    except:
+    except Exception as e:
         err_file.write('\t'.join(line))
-    
+        #err_file.write(e)
+        continue 
 pymol.cmd.quit()
 end = time.time()
 print ('Run time is:'+str(end - start))            

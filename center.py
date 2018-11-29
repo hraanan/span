@@ -9,8 +9,10 @@ import time
 atoms_file=open('f:/programs/span/data/manual_cofactor_atoms_list.txt','r')
 atoms_file.readline()
 al_dict={}
+cof_dict={}
 for line in atoms_file:
     line=line.split('\t')
+    cof_dict[line[1]]=line[2]
     if line[3]=='all':
         continue
     al_dict[line[1]]=[line[3],line[4][:-1]]
@@ -82,13 +84,24 @@ def is_in_list(cof):
         return True
     else:
         return False
+
+def cof_type(cof):
+    cof=cof.upper()
+    if is_in_list(cof):
+        return cof_dict.get(cof)
+    else:
+        return 'NA'
+
+
+
 #test get_atom_list function
 
-print(is_in_list('nad'))
-print(get_atom_list('CLA'))
-print(get_atom_list('NAD'))
-print(get_atom_list('ADE_FAD'))
-
-print(has_ade('NAD'))
-print(has_ade('CLA'))
+#print(is_in_list('nad'))
+#print(get_atom_list('CLA'))
+#print(get_atom_list('NAD'))
+#print(get_atom_list('ADE_FAD'))
 #
+#print(has_ade('NAD'))
+#print(has_ade('CLA'))
+#print(cof_type('cla'))
+##

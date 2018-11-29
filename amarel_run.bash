@@ -6,7 +6,7 @@
 #SBATCH --ntasks=1                # Number of tasks (usually = cores) on each node
 #SBATCH --cpus-per-task=1         # Threads per process (or per core)
 #SBATCH --mem=1000                # Real memory required (MB)
-#SBATCH --time=00:01:00           # Total run time limit (HH:MM:SS)
+#SBATCH --time=01:00:00           # Total run time limit (HH:MM:SS)
 #SBATCH --output=slurm.%N.%j.out  # STDOUT output file
 #SBATCH --error=slurm.%N.%j.out   # STDERR output file
 #SBATCH --export=ALL              # Export you current env to the job env
@@ -15,10 +15,10 @@
 #alias python=/home/hr253/pymol/bin/python2.7
 export LD_LIBRARY_PATH=/home/hr253/pymol:$LD_LIBRARY_PATH
 
-IN_FILE_NAME=$1
-PYTHON_FILE=$2
+IN_FILE_NAME=$2
+PYTHON_FILE=$1
 
-/home/hr253/pymol/bin/python ~/span/$PYTHON_FILE $IN_FILE_NAME
+/home/hr253/pymol/bin/python $PYTHON_FILE $IN_FILE_NAME
 
 
 
